@@ -10,13 +10,14 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(DT)
 ```
 
 
 # Page I 
 
 
-Column {data-width=400}
+Column {data-width=400, .tabset}
 -----------------------------------------------------------------------
 
 
@@ -24,23 +25,81 @@ Column {data-width=400}
 ### Chart A
 
 ```{r}
+plotA
 
 ```
+
+
+
+
+### Chart A1
+
+```{r}
+library(ggplot2)
+library(tinytex)
+data <- read.csv("biostats.csv")
+
+
+head(data)
+
+chartA1 <- ggplot(data, aes(x=Age, y=Weight..lbs., colour = Age)) + geom_bar(stat='identity')+labs(title = "Biostats",subtitle = "Age Vs Weight", caption = "By sachin sharma ")+
+  annotate("text",x = 40, y = 400, label = "Biostats Comparison Chart", colour = "purple", fontface = "bold", size = 4.5)
+
+
+
+chartA1
+
+```
+
+
+
+
+
+### Chart A2
+
+```{r}
+
+plotA2
+
+```
+
+
 
 Column {data-width=300}
 -----------------------------------------------------------------------
 
-### Chart B
+### ValueBOx
 
 ```{r}
+valueBox(dim(df)[1],icon = "fa-pencil")
+```
+
+
+### Chart B1
+
+<b>In this chart we will learn how to plot maps in R </b>
+
+```{r}
+#install.packages(c("cowplot", "googleway", "ggplot2", "ggrepel","ggspatial", "libwgeom", "sf", "rnaturalearth", "rnaturalearthdata"))
+library("ggplot2")
+theme_set(theme_bw())
+library("sf")
+
+library("rnaturalearth")
+library("rnaturalearthdata")
+#install.packages("rgeos")
+library(rgeos)
+world <- ne_countries(scale = "medium", returnclass = "sf")
+class(world)
+
+ggplot(data = world) +
+    geom_sf()
 
 ```
 
-### Chart C
 
-```{r}
 
-```
+
 
 
 Column {data-width=300}
@@ -48,7 +107,27 @@ Column {data-width=300}
 
 ### Chart D
 
+<h2 style="color:Tomato;">Hello, in this graph we will learn how to create <strong> hover over effects </strong> using plotly</h2>
+
+
+
+
 ```{r}
+
+# Making hover over effects in Plotly 
+
+
+library(plotly)
+graph_p = plot_ly(data = mtcars,
+             x =~mpg,
+             y = ~wt,
+             type = "scatter",
+             mode = "markers",
+             hoverinfo = "text",
+             text = paste("Miles per gallon:", mtcars$mpg,
+                        "\n", "Weight: ", mtcars$wt)) # this code will show mpg and wt in two different lines
+
+graph_p
 
 ```
 
@@ -60,6 +139,48 @@ Column {data-width=300}
 ## Column {data-width=300}
 
 ### Chart E
+
+```{r}
+
+datatable(
+  df,
+  extensions = 'Buttons', options = list(
+    dom = 'Bfrtip',
+    buttons = 
+      list('copy', 'print', list(
+        extend = 'collection',
+        buttons = c('csv', 'excel', 'pdf'),
+        text = 'Download'
+      ))
+    
+  )
+)
+
+```
+
+
+
+
+
+### Chart E1
+
+
+<b>In this chart we will learn how to add title, label, fill colour in maps </b>
+
+
+```{r}
+ggplot(data = world) +
+    geom_sf() +
+    xlab("Longitude") + ylab("Latitude") +
+    ggtitle("World map", subtitle = paste0("(", length(unique(world$NAME)), " countries)"))+geom_sf(color = "black", fill = "blue")+coord_sf(xlim = c(-102.15, -74.12), ylim = c(7.65, 33.97), expand = FALSE)
+
+```
+
+
+
+
+
+### Chart E2
 
 ```{r}
 
